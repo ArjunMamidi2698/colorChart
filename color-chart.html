@@ -21,6 +21,9 @@
         #color-chart{
             text-align: center;
         }
+        .selected-color{
+            width: 100%;
+        }
         .selected{
             padding: 0.5rem !important;
             border: 2px solid green;
@@ -44,16 +47,45 @@
                     <template>
                         <tr v-for="colorObj in colors">
                             <!-- first row as BASE-->
-                            <td class="pa-1 text-center" :class="selectedColors.includes(colorObj.base) ? 'selected' : 'unselected'">
-                                <v-btn :id="`${colorObj.base}`" @click="addToSelection(colorObj.base)" :color="colorObj.base"></v-btn>
+                            <td class="pa-1 text-center">
+                                <v-btn :id="`${colorObj.base}`" @click="addToSelection(colorObj.base)" :color="colorObj.base"><v-icon v-if="selectedColors.includes(colorObj.base)">done</v-icon></v-btn>
                             </td>
                             <!-- remaining rows from dark to light-->
-                            <td class="pa-1 text-center" :class="selectedColors.includes(color) ? 'selected' : 'unselected'" v-for="color in (Object.values(colorObj)).reverse().slice(0,Object.values(colorObj).length - 1)">
-                                <v-btn :id="color" :color="color" @click="addToSelection(color)"></v-btn>
+                            <td class="pa-1 text-center" v-for="color in (Object.values(colorObj)).reverse().slice(0,Object.values(colorObj).length - 1)">
+                                <v-btn :id="color" :color="color" @click="addToSelection(color)"><v-icon v-if="selectedColors.includes(color)">done</v-icon></v-btn>
                             </td>
                         </tr>
                     </template>
                 </v-simple-table>
+                <!-- selected colors-->
+                <v-card id="selected-colors-chart">
+                    <h3>Selected Colors:</h3>
+                    <!-- <v-card class="pa-2"> -->
+                        <!-- <v-layout row>
+                            <v-flex xs-3 class="pa-1 text-center" v-for="color in selectedColors">
+                                <v-btn class="selected-color" :id="color" :color="color"></v-btn>
+                            </v-flex>
+                        </v-layout> -->
+                        <v-row no-gutters>
+                            <template v-for="(color,index) in selectedColors">
+                                <v-col :key="color">
+                                <v-card
+                                    class="pa-2"
+                                    outlined
+                                    tile
+                                >
+                                <v-btn class="selected-color" :id="color" :color="color"></v-btn>
+                                </v-card>
+                                </v-col>
+                                <v-responsive
+                                v-if="index === 2"
+                                :key="`width-${index}`"
+                                width="100%"
+                                ></v-responsive>
+                            </template>
+                        </v-row>
+                    <!-- </v-card> -->
+                </v-card>
             </v-container>
         </v-app>
     </div>
@@ -77,7 +109,7 @@
                     }
                 },
                 downloadPNG(){
-                    html2canvas(document.getElementById('color-chart'), {
+                    html2canvas(document.getElementById('selected-colors-chart'), {
                         logging: true,
                         letterRendering: 1,
                         allowTaint: false,
