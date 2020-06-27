@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons" />
+    <link rel = "stylesheet"
+    href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.3.2/lib/util/colors.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/canvas2image@1.0.5/canvas2image.min.js"></script> -->
+    <style>
+        #color-chart{
+            text-align: center;
+        }
+        .selected{
+            padding: 0.5rem !important;
+            border: 2px solid green;
+            border-radius: 8px;
+        }
+        .unselected{
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="color-chart">
+        <v-app>
+            <v-container>
+                <h1>Colour's Chart</h1><br>
+                <div>
+                    <strong>Selct your favourite colours and Save your Selection => </strong> 
+                    <v-btn color="primary" rounded @click="downloadPNG()">Download</v-btn>
+                </div><br>
+                <v-simple-table id="colors-chart">
+                    <template>
+                        <tr v-for="colorObj in colors">
+                            <!-- first row as BASE-->
+                            <td class="pa-1 text-center" :class="selectedColors.includes(colorObj.base) ? 'selected' : 'unselected'">
+                                <v-btn :id="`${colorObj.base}`" @click="addToSelection(colorObj.base)" :color="colorObj.base"></v-btn>
+                            </td>
+                            <!-- remaining rows from dark to light-->
+                            <td class="pa-1 text-center" :class="selectedColors.includes(color) ? 'selected' : 'unselected'" v-for="color in (Object.values(colorObj)).reverse().slice(0,Object.values(colorObj).length - 1)">
+                                <v-btn :id="color" :color="color" @click="addToSelection(color)"></v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                </v-simple-table>
+            </v-container>
+        </v-app>
+    </div>
+    <script src="colors.js"></script>
+    <script type="module">
+        var vm = new Vue({
+            el: '#color-chart',
+            vuetify: new Vuetify(),
+            data() {
+                return {
+                    selectedColors: [],
+                }
+            },
+            methods: {
+                addToSelection(color){
+                    const self = this;
+                    if (self.selectedColors.includes(color)) {
+                        self.selectedColors.splice(self.selectedColors.indexOf(color), 1);
+                    } else {
+                        self.selectedColors.push(color);
+                    }
+                },
+                downloadPNG(){
+                    html2canvas(document.getElementById('color-chart'), {
+                        logging: true,
+                        letterRendering: 1,
+                        allowTaint: false,
+                        useCORS: true,
+                        onrendered: function (canvas) {
+                            var link = document.createElement('a');
+                            link.download = 'colorsChart.png';
+                            link.href = canvas.toDataURL()
+                            link.click();
+                            // Canvas2Image.saveAsPNG(canvas);
+                        }
+                    });
+                }
+            },
+        });
+    </script>
+</body>
+</html>
