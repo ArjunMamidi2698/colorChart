@@ -5,7 +5,6 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Colors Chart</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons" />
@@ -23,14 +22,6 @@
         }
         .selected-color{
             width: 100%;
-        }
-        .selected{
-            padding: 0.5rem !important;
-            border: 2px solid green;
-            border-radius: 8px;
-        }
-        .unselected{
-            border: none;
         }
     </style>
 </head>
@@ -63,31 +54,25 @@
                 <!-- selected colors-->
                 <v-card id="selected-colors-chart" v-if="selectedColors.length">
                     <h3>Selected Colors:</h3>
-                    <!-- <v-card class="pa-2"> -->
-                        <!-- <v-layout row>
-                            <v-flex xs-3 class="pa-1 text-center" v-for="color in selectedColors">
-                                <v-btn class="selected-color" :id="color" :color="color"></v-btn>
-                            </v-flex>
-                        </v-layout> -->
-                        <v-row no-gutters>
-                            <template v-for="(color,index) in selectedColors">
-                                <v-col :key="color">
-                                <v-card
-                                    class="pa-2"
-                                    outlined
-                                    tile
-                                >
-                                <v-btn class="selected-color" :id="color" :color="color"></v-btn>
-                                </v-card>
-                                </v-col>
-                                <v-responsive
-                                v-if="index === 2"
-                                :key="`width-${index}`"
-                                width="100%"
-                                ></v-responsive>
-                            </template>
-                        </v-row>
-                    <!-- </v-card> -->
+                    <v-row no-gutters>
+                        <template v-for="(color,index) in selectedColors">
+                            <v-col :key="color">
+                            <v-card
+                                class="pa-2"
+                                outlined
+                                tile
+                            >
+                            <v-btn class="selected-color" :id="color" :color="color"></v-btn>
+                            </v-card>
+                            </v-col>
+                            <v-responsive
+                            v-if="index === 2"
+                            :key="`width-${index}`"
+                            width="100%"
+                            ></v-responsive>
+                        </template>
+                    </v-row>
+                    <a href="#">https://arjunmamidi2698.github.io/colorChart/color-chart.html</a>
                 </v-card>
             </v-container>
         </v-app>
@@ -112,19 +97,23 @@
                     }
                 },
                 downloadPNG(){
-                    html2canvas(document.getElementById('selected-colors-chart'), {
-                        logging: true,
-                        letterRendering: 1,
-                        allowTaint: false,
-                        useCORS: true,
-                        onrendered: function (canvas) {
-                            var link = document.createElement('a');
-                            link.download = 'colorsChart.png';
-                            link.href = canvas.toDataURL()
-                            link.click();
-                            // Canvas2Image.saveAsPNG(canvas);
-                        }
-                    });
+                    if(this.selectedColors.length){
+                        html2canvas(document.getElementById('selected-colors-chart'), {
+                            logging: true,
+                            letterRendering: 1,
+                            allowTaint: false,
+                            useCORS: true,
+                            onrendered: function (canvas) {
+                                var link = document.createElement('a');
+                                link.download = 'colorsChart.png';
+                                link.href = canvas.toDataURL();
+                                link.click();
+                                // Canvas2Image.saveAsPNG(canvas);
+                            }
+                        });
+                    } else {
+                        alert('Not Selected any Colour from the chart!!, Click on required colors and click download');
+                    }
                 }
             },
         });
