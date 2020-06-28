@@ -40,13 +40,16 @@
             <v-container>
                 <h1>Colour's Chart</h1><br>
                 <div>
-                    <strong>Selct your favourite colours and Save your Selection => </strong> 
+                    <strong>Select your favourite colours and Save your Selection => </strong> 
                     <v-btn color="primary" rounded @click="downloadPNG()">Download</v-btn>
                 </div><br>
                 <v-simple-table id="colors-chart">
                     <template>
-                        <tr v-for="colorObj in colors">
+                        <tr v-for="(colorObj,index) in colors">
                             <!-- first row as BASE-->
+                            <td class="pa-1 text-left">
+                            {{index.toUpperCase()}}
+                            </td>
                             <td class="pa-1 text-center">
                                 <v-btn :id="`${colorObj.base}`" @click="addToSelection(colorObj.base)" :color="colorObj.base"><v-icon v-if="selectedColors.includes(colorObj.base)">done</v-icon></v-btn>
                             </td>
@@ -58,7 +61,7 @@
                     </template>
                 </v-simple-table>
                 <!-- selected colors-->
-                <v-card id="selected-colors-chart">
+                <v-card id="selected-colors-chart" v-if="selectedColors.length">
                     <h3>Selected Colors:</h3>
                     <!-- <v-card class="pa-2"> -->
                         <!-- <v-layout row>
